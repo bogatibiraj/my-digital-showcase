@@ -74,14 +74,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Biraj Bogati" },
+      { name: "description", content: "A personal portfolio website showcasing skills, projects, and professional details." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Biraj Bogati" },
+      { property: "og:description", content: "A personal portfolio website showcasing skills, projects, and professional details." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Biraj Bogati" },
+      { name: "twitter:description", content: "A personal portfolio website showcasing skills, projects, and professional details." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9296651f-3bd4-4221-8b29-e731b4e47262/id-preview-6c175029--070cd6d5-1454-4a31-9f2e-22fa35230bb2.lovable.app-1778094338242.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9296651f-3bd4-4221-8b29-e731b4e47262/id-preview-6c175029--070cd6d5-1454-4a31-9f2e-22fa35230bb2.lovable.app-1778094338242.png" },
     ],
     links: [
       {
