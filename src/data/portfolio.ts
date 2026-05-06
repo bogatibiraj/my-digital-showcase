@@ -22,6 +22,23 @@ export const skills: { category: string; items: string[] }[] = [
 
 export const experience = [
   {
+    role: "Project Manager",
+    company: "Digit Nepal",
+    period: "Jan 2026 — Present",
+    projects: [
+      {
+        name: "POS System",
+        bullets: [
+          "Leading end-to-end delivery of a modern Point of Sale (POS) system as Project Manager.",
+          "Defining product roadmap, milestones and sprint goals; coordinating cross-functional teams across frontend, backend and QA.",
+          "Gathering requirements from stakeholders and translating them into technical specs, user stories and acceptance criteria.",
+          "Driving architecture decisions for billing, inventory, payments and multi-outlet support alongside the engineering team.",
+          "Tracking progress, risks and timelines using Agile/Scrum and ensuring on-time, high-quality releases.",
+        ],
+      },
+    ],
+  },
+  {
     role: "Backend Developer",
     company: "GoldenTechnosoft",
     period: "Nov 2024 — Present",
