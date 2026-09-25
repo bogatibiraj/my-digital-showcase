@@ -1,21 +1,17 @@
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "node:path";
 
 export default defineConfig({
-  tanstackStart: {
-    server: {
-      entry: "index",
-    },
+  base: process.env.VITE_BASE_PATH || "/",
 
-    prerender: {
-      enabled: true,
-      autoSubfolderIndex: true,
-      autoStaticPathsDiscovery: true,
-      crawlLinks: true,
-      failOnError: true,
-    },
-  },
+  plugins: [
+    react(),
+  ],
 
-  vite: {
-    base: process.env.VITE_BASE_PATH || "/",
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
   },
 });
