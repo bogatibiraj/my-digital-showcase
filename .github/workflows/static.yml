@@ -31,15 +31,22 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build
+      - name: Build application
         run: bun run build
         env:
           VITE_BASE_PATH: /my-digital-showcase/
 
+      - name: Show build output
+        run: |
+          echo "=== dist ==="
+          find dist -maxdepth 3 -type f 2>/dev/null || true
+          echo "=== .output ==="
+          find .output -maxdepth 4 -type f 2>/dev/null || true
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload site
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
