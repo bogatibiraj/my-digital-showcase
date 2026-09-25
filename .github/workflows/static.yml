@@ -17,42 +17,154 @@ concurrency:
 
 jobs:
   build:
+    name: Build application
     runs-on: ubuntu-latest
 
     steps:
+      # --------------------------------
+      # Checkout
+      # --------------------------------
       - name: Checkout
         uses: actions/checkout@v4
 
+      # --------------------------------
+      # Setup Bun
+      # --------------------------------
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: "1.4.2"
 
+      # --------------------------------
+      # Install dependencies
+      # --------------------------------
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # --------------------------------
+      # Build application
+      # --------------------------------
       - name: Build application
         run: bun run build
         env:
           VITE_BASE_PATH: /my-digital-showcase/
 
-      - name: Show build output
+      # --------------------------------
+      # Inspect build
+      # --------------------------------
+      - name: Inspect build output
         run: |
-          echo "=== dist ==="
-          find dist -maxdepth 3 -type f 2>/dev/null || true
-          echo "=== .output ==="
-          find .output -maxdepth 4 -type f 2>/dev/null || true
+          echo "======================================"
+          echo "ROOT"
+          echo "======================================"
+          ls -la
 
+          echo ""
+          echo "======================================"
+          echo "DIST"
+          echo "======================================"
+
+          if [ -d "dist" ]; then
+            find dist -maxdepth 5 -type f | sort
+          else
+            echo "dist directory does not exist"
+          fi
+
+          echo ""
+          echo "======================================"
+          echo ".OUTPUT"
+          echo "======================================"
+
+          if [ -d ".output" ]; then
+            find .output -maxdepth 6 -type f | sort
+          else
+            echo ".output directory does not exist"
+          fi
+
+      # --------------------------------
+      # Find index.html
+      # --------------------------------
+      - name: Find static index.html
+        id: find_index
+        shell: bash
+        run: |
+          set -e
+
+          echo "Searching for index.html..."
+
+          INDEX_FILE=$(find dist .output -type f -name "index.html" 2>/dev/null | head -n 1 || true)
+
+          if [ -z "$INDEX_FILE" ]; then
+            echo ""
+            echo "ERROR: No index.html found!"
+            echo ""
+            echo "Your application is currently producing a server build"
+            echo "instead of a static GitHub Pages build."
+            echo ""
+            exit 1
+          fi
+
+          echo "Found:"
+          echo "$INDEX_FILE"
+
+          INDEX_DIR=$(dirname "$INDEX_FILE")
+
+          echo "index_dir=$INDEX_DIR" >> "$GITHUB_OUTPUT"
+
+      # --------------------------------
+      # Prepare GitHub Pages artifact
+      # --------------------------------
+      - name: Prepare Pages artifact
+        shell: bash
+        run: |
+          set -e
+
+          rm -rf pages
+
+          INDEX_DIR="${{ steps.find_index.outputs.index_dir }}"
+
+          echo "Using:"
+          echo "$INDEX_DIR"
+
+          mkdir -p pages
+
+          cp -R "$INDEX_DIR"/. pages/
+
+          echo ""
+          echo "======================================"
+          echo "FINAL PAGES CONTENT"
+          echo "======================================"
+
+          find pages -maxdepth 5 -type f | sort
+
+          echo ""
+          echo "Checking index.html..."
+
+          test -f pages/index.html
+
+          echo "index.html found successfully."
+
+      # --------------------------------
+      # GitHub Pages configuration
+      # --------------------------------
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      # --------------------------------
+      # Upload artifact
+      # --------------------------------
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./pages
 
+  # ====================================
+  # DEPLOY
+  # ====================================
   deploy:
+    name: Deploy to GitHub Pages
     needs: build
+
     runs-on: ubuntu-latest
 
     environment:
@@ -60,6 +172,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v5
