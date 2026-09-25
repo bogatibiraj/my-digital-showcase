@@ -26,13 +26,16 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.1"
+          bun-version: latest
+
+      - name: Check Bun version
+        run: bun --version
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build application
-        run: bun run build
+      - name: Generate static site
+        run: bun run generate
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
@@ -40,7 +43,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./dist"
+          path: ".output/public"
 
   deploy:
     needs: build
